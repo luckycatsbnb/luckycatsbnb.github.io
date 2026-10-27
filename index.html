@@ -1,0 +1,868 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Lucky Cats 招财猫 · Mint on BNB Chain</title>
+<meta name="description" content="Lucky Cats 招财猫 (LUCKY): fully on-chain pixel maneki-neko for AI agents on BNB Smart Chain. Free mint for .ai Agent ID holders, Angpao boxes, forge and trade.">
+<meta name="theme-color" content="#7a0d12">
+<meta property="og:title" content="Lucky Cats 招财猫">
+<meta property="og:description" content="Fully on-chain pixel maneki-neko for AI agents on BNB Smart Chain.">
+<meta property="og:image" content="assets/og-banner.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@LuckyCatsBNB">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<style>
+@font-face{font-family:"Press Start 2P";src:url(assets/press-start-2p.woff2) format("woff2");font-display:swap}
+@font-face{font-family:"VT323";src:url(assets/vt323.woff2) format("woff2");font-display:swap}
+:root{
+  --red:#c8102e;--red-d:#7a0d12;--red-dd:#3d0608;--ink:#1a0505;
+  --gold:#ffc83d;--gold-d:#d99a00;--cream:#fff3d6;--jade:#1fae7a;--jade-d:#0d6b4a;
+  --px:"Press Start 2P","Courier New",ui-monospace,monospace;
+  --body:"VT323","Courier New",ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--red-dd);color:var(--cream);font-family:var(--body);font-size:22px;line-height:1.25;
+  background-image:radial-gradient(circle at 1px 1px,rgba(255,200,61,.07) 1px,transparent 0);background-size:8px 8px;
+  -webkit-font-smoothing:none;image-rendering:pixelated}
+a{color:var(--gold)}
+img{image-rendering:pixelated}
+.wrap{max-width:1080px;margin:0 auto;padding:0 14px}
+h1,h2,h3,.px{font-family:var(--px);font-weight:400;letter-spacing:.5px}
+h2{font-size:15px;color:var(--gold);margin:0 0 14px;text-shadow:2px 2px 0 var(--ink)}
+h3{font-size:11px;margin:0 0 8px;color:var(--gold)}
+/* header */
+header.top{position:sticky;top:0;z-index:20;background:var(--red-d);border-bottom:4px solid var(--ink);box-shadow:0 4px 0 var(--gold-d)}
+header.top .wrap{display:flex;align-items:center;gap:10px;min-height:58px}
+.brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--cream)}
+.brand img{width:38px;height:38px;border:3px solid var(--ink);background:var(--gold)}
+.brand span{font-family:var(--px);font-size:11px;line-height:1.5}
+.brand small{display:block;color:var(--gold);font-size:9px}
+.spacer{flex:1}
+.netpill{font-family:var(--px);font-size:8px;padding:6px 7px;background:var(--ink);border:2px solid var(--gold-d);color:var(--gold);display:none}
+/* buttons */
+.btn{font-family:var(--px);font-size:11px;line-height:1.4;cursor:pointer;color:var(--ink);background:var(--gold);
+  border:3px solid var(--ink);padding:11px 14px;box-shadow:4px 4px 0 var(--ink);text-transform:uppercase;
+  transition:transform .05s;user-select:none;-webkit-tap-highlight-color:transparent}
+.btn:hover{background:#ffd76b}
+.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+.btn[disabled]{opacity:.45;cursor:not-allowed;transform:none;box-shadow:4px 4px 0 var(--ink)}
+.btn.red{background:var(--red);color:var(--cream)}
+.btn.red:hover{background:#e0213f}
+.btn.jade{background:var(--jade);color:var(--cream)}
+.btn.jade:hover{background:#29c48b}
+.btn.ghost{background:transparent;color:var(--gold);border-color:var(--gold-d);box-shadow:3px 3px 0 var(--ink)}
+.btn.sm{font-size:9px;padding:7px 9px;box-shadow:3px 3px 0 var(--ink)}
+.btn.block{width:100%}
+/* hero */
+.hero{position:relative;border-bottom:4px solid var(--ink)}
+.hero img.banner{display:block;width:100%;height:auto;min-height:150px;object-fit:cover;object-position:center}
+.hero .tag{position:absolute;left:0;right:0;bottom:0;padding:16px 14px 12px;
+  background:linear-gradient(transparent,rgba(26,5,5,.88) 45%)}
+.hero h1{font-size:clamp(16px,4.2vw,30px);margin:0;color:var(--gold);text-shadow:3px 3px 0 var(--ink),-1px -1px 0 var(--red-d)}
+.hero p{margin:6px 0 0;font-size:20px;max-width:640px}
+@media(max-width:640px){.hero .tag{position:static;background:var(--ink);padding:12px 0 10px}.hero p{font-size:18px}}
+/* banner */
+.notice{font-family:var(--px);font-size:11px;text-align:center;padding:12px 10px;line-height:1.6;border-bottom:4px solid var(--ink)}
+.notice.paused{background:var(--gold);color:var(--ink)}
+.notice.live{background:var(--jade);color:var(--cream)}
+.notice.err{background:#4a0b10;color:var(--gold)}
+.notice .blink{animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+/* panels */
+section{padding:26px 0 6px}
+.panel{background:var(--red-d);border:4px solid var(--ink);box-shadow:6px 6px 0 var(--ink),inset 0 0 0 3px var(--gold-d);padding:16px;position:relative}
+.panel.cream{background:var(--cream);color:var(--ink)}
+.panel.cream h2,.panel.cream h3{color:var(--red-d);text-shadow:none}
+.grid2{display:grid;gap:18px;grid-template-columns:1fr}
+@media(min-width:820px){.grid2{grid-template-columns:1fr 1fr}}
+/* stats */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(min-width:820px){.stats{grid-template-columns:repeat(4,1fr)}}
+.stat{background:var(--ink);border:3px solid var(--gold-d);padding:10px}
+.stat .k{font-family:var(--px);font-size:8px;color:var(--gold);text-transform:uppercase}
+.stat .v{font-family:var(--px);font-size:15px;margin-top:8px;color:var(--cream);white-space:nowrap}
+.stat .v small{font-size:9px;color:#d8b98a}
+.bar{height:12px;background:#2a0a0a;border:2px solid var(--gold-d);margin-top:8px}
+.bar i{display:block;height:100%;background:repeating-linear-gradient(90deg,var(--gold) 0 6px,var(--gold-d) 6px 8px);width:0}
+.stat.jade .v{color:#6fe7b6}.stat.jade{border-color:var(--jade)}
+.stat.golden .v{color:var(--gold)}
+.meta{font-size:18px;color:#d8b98a;margin-top:10px}
+/* mint */
+.mintcard{display:flex;flex-direction:column;gap:12px}
+.mintcard .art{display:flex;gap:10px;align-items:center}
+.mintcard .art img{width:84px;height:84px;border:3px solid var(--ink);background:var(--ink)}
+.mintcard p{margin:0}
+.odds{font-size:18px;color:#d8b98a}
+.panel.cream .odds{color:#6b3a1a}
+.qty{display:flex;align-items:center;gap:8px}
+.qty input{width:64px;text-align:center;font-family:var(--px);font-size:14px;padding:9px 4px;border:3px solid var(--ink);background:#fff;color:var(--ink)}
+.qty .btn{padding:9px 12px}
+.total{font-family:var(--px);font-size:11px}
+.msg{font-size:20px;padding:9px 11px;border:3px dashed var(--gold-d);background:rgba(0,0,0,.25)}
+.panel.cream .msg{background:#fff9ea;border-color:var(--red)}
+.msg.ok{border-color:var(--jade);border-style:solid}
+.msg.bad{border-color:var(--gold);border-style:solid}
+.hidden{display:none!important}
+/* wallet box */
+.walletbox{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.addr{font-family:var(--px);font-size:10px;word-break:break-all}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chip{font-family:var(--px);font-size:8px;padding:5px 6px;border:2px solid var(--ink);background:var(--gold);color:var(--ink)}
+.chip.no{background:#ff8a8a}.chip.yes{background:#7ff0c0}
+/* cats grid */
+.cats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(min-width:560px){.cats{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:900px){.cats{grid-template-columns:repeat(5,1fr)}}
+.cat{background:var(--ink);border:3px solid var(--gold-d);padding:6px;position:relative;cursor:pointer}
+.cat.sel{border-color:var(--jade);box-shadow:0 0 0 3px var(--jade)}
+.cat img,.cat .ph{width:100%;aspect-ratio:1;display:block;background:#2a0a0a}
+.cat .ph{display:flex;align-items:center;justify-content:center;font-family:var(--px);font-size:9px;color:var(--gold-d)}
+.cat .nm{font-family:var(--px);font-size:9px;margin-top:6px;display:flex;justify-content:space-between;gap:4px}
+.cat .tr{font-size:17px;color:#d8b98a;min-height:20px}
+.tier{font-family:var(--px);font-size:7px;padding:3px 4px;border:2px solid var(--ink)}
+.t0{background:#c9b8a0;color:var(--ink)}.t1{background:#ff6b6b;color:var(--ink)}.t2{background:var(--gold);color:var(--ink)}.t3{background:var(--jade);color:#fff}.tS{background:#555;color:#fff}
+.cat .acts{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap}
+.cat .acts input{width:72px;font-family:var(--body);font-size:17px;padding:2px 4px;border:2px solid var(--gold-d);background:#fff;color:var(--ink)}
+.cat .listed{position:absolute;top:10px;left:10px;font-family:var(--px);font-size:7px;background:var(--red);border:2px solid var(--ink);padding:3px 4px}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+/* code */
+pre,code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px}
+pre{background:var(--ink);color:#ffe9b8;border:3px solid var(--gold-d);padding:12px;overflow:auto;margin:8px 0;line-height:1.45}
+table{border-collapse:collapse;width:100%;font-size:18px}
+.tbl{overflow-x:auto}
+th,td{border:2px solid var(--ink);padding:6px 7px;text-align:left;vertical-align:top}
+th{background:var(--gold);color:var(--ink);font-family:var(--px);font-size:8px}
+td code{font-size:12px;word-break:break-all}
+.panel.cream td{background:#fff9ea}
+/* toasts */
+#toasts{position:fixed;right:10px;bottom:10px;left:10px;z-index:60;display:flex;flex-direction:column;gap:8px;align-items:flex-end;pointer-events:none}
+.toast{pointer-events:auto;max-width:420px;width:100%;background:var(--ink);border:3px solid var(--gold);box-shadow:4px 4px 0 #000;padding:10px 12px;font-size:19px}
+.toast.ok{border-color:var(--jade)}.toast.bad{border-color:#ff6b6b}
+.toast b{font-family:var(--px);font-size:9px;display:block;margin-bottom:4px;color:var(--gold)}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(10,0,0,.75);z-index:50;display:flex;align-items:center;justify-content:center;padding:14px}
+.modal .panel{max-width:420px;width:100%}
+.wlist{display:flex;flex-direction:column;gap:10px;margin:12px 0}
+.wlist button{display:flex;align-items:center;gap:10px;justify-content:flex-start}
+.wlist img{width:24px;height:24px;image-rendering:auto}
+footer{padding:30px 0 90px;text-align:center;font-size:18px;color:#d8b98a}
+footer .px{font-size:9px}
+.coins{font-family:var(--px);color:var(--gold)}
+.mono{font-family:ui-monospace,Menlo,monospace;font-size:13px;word-break:break-all}
+.right{text-align:right}
+details summary{cursor:pointer;font-family:var(--px);font-size:10px;color:var(--gold);margin:8px 0}
+.panel.cream details summary{color:var(--red-d)}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#"><img src="assets/logo.png" alt=""><span>LUCKY CATS<small>招财猫 · BNB CHAIN</small></span></a>
+    <div class="spacer"></div>
+    <span class="netpill" id="netpill"></span>
+    <button class="btn sm" id="btnConnect">Connect</button>
+  </div>
+</header>
+
+<div class="hero">
+  <img class="banner" src="assets/banner.webp" alt="Pixel maneki-neko lucky cats under red lanterns" width="1400" height="462">
+  <div class="tag"><div class="wrap">
+    <h1>LUCKY CATS 招财猫</h1>
+    <p>Fully on-chain pixel maneki-neko for AI agents on BNB Smart Chain. Wave the paw, invite the luck.</p>
+  </div></div>
+</div>
+
+<div id="notice" class="notice paused"><span class="blink">▶</span> Loading the shrine…</div>
+
+<main class="wrap">
+
+<!-- STATS -->
+<section id="stats">
+  <h2>🏮 Live stats</h2>
+  <div class="stats">
+    <div class="stat"><div class="k">Free minted</div><div class="v"><span id="sFree">–</span><small> / 5000</small></div><div class="bar"><i id="bFree"></i></div></div>
+    <div class="stat"><div class="k">Angpao boxes</div><div class="v"><span id="sBox">–</span><small> / 5000</small></div><div class="bar"><i id="bBox"></i></div></div>
+    <div class="stat jade"><div class="k">Jade 翡翠</div><div class="v"><span id="sJade">–</span><small> / 100</small></div><div class="bar"><i id="bJade"></i></div></div>
+    <div class="stat golden"><div class="k">Golden 金</div><div class="v"><span id="sGold">–</span><small> / 1000</small></div><div class="bar"><i id="bGold"></i></div></div>
+  </div>
+  <div class="meta" id="sMeta">Box price – · Forge fee – · Supply – · Waiting to reveal –</div>
+</section>
+
+<!-- WALLET + MINT -->
+<section id="mint">
+  <h2>🐾 Mint</h2>
+  <div class="panel" style="margin-bottom:18px">
+    <div class="walletbox">
+      <div>
+        <div class="px" style="font-size:10px;color:var(--gold);margin-bottom:6px">Your wallet</div>
+        <div class="addr" id="wAddr">Not connected</div>
+        <div class="chips" id="wChips"></div>
+      </div>
+      <button class="btn" id="btnConnect2">Connect wallet</button>
+    </div>
+    <div class="msg hidden" id="agentMsg" style="margin-top:12px"></div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel cream mintcard">
+      <h3>Free mint · 1 per wallet</h3>
+      <div class="art"><img src="assets/cat_sealed.png" alt=""><div>
+        <p>Gas only. One cat for every wallet holding a <b>.ai Agent ID</b>.</p>
+        <p class="odds">Odds: Common 80% · Lucky 15% · Golden 4.5% · Jade 0.5%</p>
+      </div></div>
+      <button class="btn red block" id="btnFree" disabled>Free mint</button>
+    </div>
+    <div class="panel cream mintcard">
+      <h3>Angpao box 红包 · up to 10</h3>
+      <div class="art"><img src="assets/cat_golden.png" alt=""><div>
+        <p>Better odds. Payment goes straight to the treasury.</p>
+        <p class="odds">Odds: Common 55% · Lucky 30% · Golden 12% · Jade 3%</p>
+      </div></div>
+      <div class="qty">
+        <button class="btn sm" id="qMinus" aria-label="less">−</button>
+        <input id="qty" type="number" min="1" max="10" value="1" inputmode="numeric" aria-label="quantity">
+        <button class="btn sm" id="qPlus" aria-label="more">+</button>
+        <span class="total" id="boxTotal">= – BNB</span>
+      </div>
+      <button class="btn red block" id="btnBox" disabled>Mint Angpao box</button>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:18px">
+    <h3>Reveal 开光</h3>
+    <p style="margin:0 0 10px">Every cat is sealed at mint and revealed with the hash of the next block. Anyone can push the queue: <b>reveal(200)</b> opens up to 200 waiting cats, yours and everyone's. Cats left unrevealed for more than 256 blocks (≈2 minutes on BSC) open as Common, so the button is here if the queue stalls.</p>
+    <div class="toolbar" style="margin:0"><button class="btn jade" id="btnReveal">Reveal pending</button><span class="coins" id="pendingTxt" style="font-size:10px"></span></div>
+  </div>
+</section>
+
+<!-- MY CATS -->
+<section id="mycats">
+  <h2>😺 My cats</h2>
+  <div class="panel">
+    <div class="toolbar">
+      <button class="btn sm" id="btnLoadCats" disabled>Load my cats</button>
+      <span id="catsInfo" style="font-size:19px">Connect a wallet to see your cats.</span>
+    </div>
+    <div class="cats" id="catsGrid"></div>
+    <div id="forgeBox" class="hidden" style="margin-top:16px;border-top:3px dashed var(--gold-d);padding-top:14px">
+      <h3>Forge 合成</h3>
+      <p style="margin:0 0 8px;font-size:19px">Tap cats to select: <b>3 Common → Lucky</b>, <b>3 Lucky → Golden</b>, <b>4 Golden → Jade</b>. Burned cats are gone for good. Fee: <span id="forgeFeeTxt">–</span> BNB.</p>
+      <div class="toolbar" style="margin:0"><button class="btn jade" id="btnForge" disabled>Forge</button><span id="forgeSel" style="font-size:19px">Nothing selected</span><button class="btn sm ghost" id="btnClearSel">Clear</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- MARKET -->
+<section id="market">
+  <h2>🧧 Market</h2>
+  <div class="panel">
+    <p style="margin:0 0 10px;font-size:19px">Peer-to-peer, no approvals needed: the contract moves the cat itself. 5% goes to the treasury, 95% to the seller. Buying needs a .ai Agent ID. List your own cats from <b>My cats</b>.</p>
+    <div class="toolbar"><button class="btn sm" id="btnLoadMarket">Load listings</button><span id="mktInfo" style="font-size:19px"></span></div>
+    <div class="cats" id="mktGrid"></div>
+  </div>
+</section>
+
+<!-- AGENTS -->
+<section id="agents">
+  <h2>🤖 For AI agents</h2>
+  <div class="panel cream">
+    <p style="margin-top:0">Agent wallets can mint by calling the contract directly. No approvals, no off-chain signature, no allowlist. The only gate is <code>AGENT_REGISTRY.balanceOf(msg.sender) &gt; 0</code> on the SPACE ID Agent ID registry.</p>
+    <div class="tbl"><table>
+      <tr><th>Item</th><th>Value</th></tr>
+      <tr><td>Chain</td><td>BNB Smart Chain mainnet, chainId <code>56</code> (<code>0x38</code>)</td></tr>
+      <tr><td>LuckyCats (LUCKY)</td><td><code class="cAddr">0x48ab7d1eddc73b329f9db049b846d547092e77df</code></td></tr>
+      <tr><td>Agent ID registry</td><td><code>0x60B9262456dE011F7d15a54CdD8c48bAaa8B022F</code></td></tr>
+      <tr><td>Public RPC</td><td><code>https://bsc-dataseed.bnbchain.org</code></td></tr>
+    </table></div>
+    <h3 style="margin-top:16px">Write calls</h3>
+    <div class="tbl"><table>
+      <tr><th>Function</th><th>Selector</th><th>msg.value</th><th>Notes</th></tr>
+      <tr><td><code>freeMint()</code></td><td><code>0x5b70ea9f</code></td><td>0</td><td>Once per wallet. Calldata is just the selector.</td></tr>
+      <tr><td><code>mintBox(uint256 qty)</code></td><td><code>0x537e5ec3</code></td><td><code>boxPrice() × qty</code> (exact)</td><td>qty 1–10. Currently <span class="boxPriceWei">–</span> wei (<span class="boxPriceBnb">–</span> BNB) each.</td></tr>
+      <tr><td><code>reveal(uint256 maxCount)</code></td><td><code>0xc2ca0ac5</code></td><td>0</td><td>Anyone. Use 200. No Agent ID needed.</td></tr>
+      <tr><td><code>forge(uint256[] ids)</code></td><td><code>0x1019bdb6</code></td><td><code>forgeFee()</code> (exact)</td><td>3 same tier, or 4 Golden → Jade. Revealed cats only.</td></tr>
+      <tr><td><code>list(uint256 id, uint256 price)</code></td><td><code>0x50fd7367</code></td><td>0</td><td>Price in wei. Revealed cats only.</td></tr>
+      <tr><td><code>cancel(uint256 id)</code></td><td><code>0x40e58ee5</code></td><td>0</td><td></td></tr>
+      <tr><td><code>buy(uint256 id)</code></td><td><code>0xd96a094a</code></td><td><code>listings(id).price</code> (exact)</td><td>Agent ID needed.</td></tr>
+    </table></div>
+    <h3 style="margin-top:16px">Read calls</h3>
+    <div class="tbl"><table>
+      <tr><th>Function</th><th>Selector</th><th>Returns</th></tr>
+      <tr><td><code>status()</code></td><td><code>0x200d2ed2</code></td><td><code>(totalMinted, totalSupply, freeMinted, boxesMinted, jadeCount, goldenCount, boxPrice, forgeFee, bool paused, nextToReveal, pending)</code></td></tr>
+      <tr><td><code>isAgent(address)</code></td><td><code>0x1ffbb064</code></td><td><code>bool</code></td></tr>
+      <tr><td><code>freeMintUsed(address)</code></td><td><code>0x456cc814</code></td><td><code>bool</code></td></tr>
+      <tr><td><code>boxPrice()</code> / <code>forgeFee()</code></td><td><code>0xa6482858</code> / <code>0x1c1c0bda</code></td><td><code>uint256</code> wei</td></tr>
+      <tr><td><code>tokenURI(uint256)</code></td><td><code>0xc87b56dd</code></td><td>data:application/json;base64 (SVG inside)</td></tr>
+      <tr><td><code>listings(uint256)</code></td><td><code>0xde74e57b</code></td><td><code>(address seller, uint96 price)</code></td></tr>
+    </table></div>
+    <details open><summary>Example: raw transactions</summary>
+<pre id="agentExample">// 1) Free mint (value 0)
+{ "chainId": 56, "to": "0x48ab7d1eddc73b329f9db049b846d547092e77df",
+  "data": "0x5b70ea9f", "value": "0x0" }
+
+// 2) Two Angpao boxes: value = boxPrice() * 2
+{ "chainId": 56, "to": "0x48ab7d1eddc73b329f9db049b846d547092e77df",
+  "data": "0x537e5ec30000000000000000000000000000000000000000000000000000000000000002",
+  "value": "&lt;boxPrice*2 in wei&gt;" }
+
+// 3) Push the reveal queue (anyone)
+{ "chainId": 56, "to": "0x48ab7d1eddc73b329f9db049b846d547092e77df",
+  "data": "0xc2ca0ac500000000000000000000000000000000000000000000000000000000000000c8", "value": "0x0" }</pre>
+    </details>
+    <details><summary>Example: Foundry cast</summary>
+<pre>C=0x48ab7d1eddc73b329f9db049b846d547092e77df
+RPC=https://bsc-dataseed.bnbchain.org
+cast call $C "isAgent(address)(bool)" $ME --rpc-url $RPC
+cast send $C "freeMint()" --rpc-url $RPC --account agent
+P=$(cast call $C "boxPrice()(uint256)" --rpc-url $RPC)
+cast send $C "mintBox(uint256)" 2 --value $((P*2)) --rpc-url $RPC --account agent
+cast send $C "reveal(uint256)" 200 --rpc-url $RPC --account agent</pre>
+    </details>
+    <details><summary>Custom errors (revert selectors)</summary>
+<pre>NotAgent 0x0d9ab13f · AlreadyFreeMinted 0x98bdb27b · SoldOut 0x52df9fe5
+BadQuantity 0x888e58a8 · WrongPayment 0x788a686f · CapReached 0xd7e991d2
+BadForge 0xa1406f51 · NotRevealed 0xb2c9bc88 · NotTokenOwner 0x59dc379f
+NotListed 0x665c1c57 · ListingStale 0x92ed4985 · SelfBuy 0x75a2aea0
+BadPrice 0xfd1ee349 · EnforcedPause 0xd93c0665 (minting paused)</pre>
+    </details>
+    <p style="margin-bottom:0;font-size:19px">Mints are sealed until the next block's hash is final. Call <code>reveal(200)</code> a few blocks later if nobody else has. Unrevealed cats cannot be listed or transferred.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="px">招财进宝 · MAY LUCK FIND YOUR WALLET</p>
+    <p><a href="https://x.com/LuckyCatsBNB" target="_blank" rel="noopener">X @LuckyCatsBNB</a> ·
+      <a id="lnkContract" href="https://bscscan.com/address/0x48ab7d1eddc73b329f9db049b846d547092e77df" target="_blank" rel="noopener">Contract on BscScan</a> ·
+      <a href="https://docs.space.id/agent-id" target="_blank" rel="noopener">About Agent ID</a></p>
+    <p style="font-size:16px">Art and metadata live fully on-chain. No off-chain server. Always check the contract address before you sign.</p>
+  </div>
+</footer>
+
+<div id="walletModal" class="modal hidden" role="dialog" aria-modal="true">
+  <div class="panel">
+    <h2>Choose a wallet</h2>
+    <div class="wlist" id="wlist"></div>
+    <p id="noWallet" class="hidden" style="font-size:19px">No browser wallet found. On mobile, open this page inside the MetaMask, Binance Wallet, Trust or OKX app browser. On desktop, install a wallet extension.</p>
+    <button class="btn sm ghost" id="btnCloseModal">Close</button>
+  </div>
+</div>
+<div id="toasts"></div>
+
+<script src="vendor/ethers.umd.min.js"></script>
+<script>
+if(!window.ethers){document.write('<script src="https://cdn.jsdelivr.net/npm/ethers@6.17.0/dist/ethers.umd.min.js"><\/script>')}
+</script>
+<script>
+"use strict";
+(() => {
+// ───────────────────────── config ─────────────────────────
+const Q = new URLSearchParams(location.search);
+const CFG = {
+  contract: Q.get("contract") || "0x48ab7d1eddc73b329f9db049b846d547092e77df",
+  registry: "0x60B9262456dE011F7d15a54CdD8c48bAaa8B022F",
+  multicall: Q.get("multicall") || "0xcA11bde05977b3631167028862bE2a173976CA11",
+  chainId: Number(Q.get("chainId") || 56),
+  rpcs: Q.get("rpc") ? [Q.get("rpc")] : [
+    "https://bsc-dataseed.bnbchain.org",
+    "https://bsc-dataseed1.bnbchain.org",
+    "https://bsc-dataseed2.bnbchain.org",
+    "https://bsc-rpc.publicnode.com",
+    "https://bsc-dataseed1.defibit.io",
+    "https://bsc-dataseed1.ninicoin.io",
+    "https://bsc.drpc.org"
+  ],
+  explorer: "https://bscscan.com",
+  local: !!Q.get("rpc"),
+};
+const BSC_PARAMS = {
+  chainId: "0x38", chainName: "BNB Smart Chain",
+  nativeCurrency: { name: "BNB", symbol: "BNB", decimals: 18 },
+  rpcUrls: ["https://bsc-dataseed.bnbchain.org"], blockExplorerUrls: ["https://bscscan.com"]
+};
+const ABI = [
+  "function status() view returns (uint256 totalMinted,uint256 totalSupply,uint256 freeMinted,uint256 boxesMinted,uint256 jadeCount,uint256 goldenCount,uint256 boxPrice,uint256 forgeFee,bool paused,uint256 nextToReveal,uint256 pending)",
+  "function isAgent(address) view returns (bool)",
+  "function freeMintUsed(address) view returns (bool)",
+  "function balanceOf(address) view returns (uint256)",
+  "function ownerOf(uint256) view returns (address)",
+  "function tokenURI(uint256) view returns (string)",
+  "function catOf(uint256) view returns (tuple(uint64 commitBlock,bool revealed,uint8 origin,uint8 rarity,uint8 palette,uint8 paw,uint8 accessory,uint8 background))",
+  "function listings(uint256) view returns (address seller,uint96 price)",
+  "function freeMint() returns (uint256)",
+  "function mintBox(uint256 qty) payable returns (uint256)",
+  "function reveal(uint256 maxCount) returns (uint256)",
+  "function forge(uint256[] ids) payable returns (uint256)",
+  "function list(uint256 id,uint256 price)",
+  "function cancel(uint256 id)",
+  "function buy(uint256 id) payable",
+  "event Transfer(address indexed from,address indexed to,uint256 indexed tokenId)",
+  "error NotAgent()","error ZeroAddress()","error AlreadyFreeMinted()","error SoldOut()","error BadQuantity()",
+  "error WrongPayment()","error PriceOutOfRange()","error TransferFailed()","error NotRevealed()","error NotTokenOwner()",
+  "error BadForge()","error CapReached()","error NotListed()","error ListingStale()","error BadPrice()","error SelfBuy()","error BadTier()",
+  "error EnforcedPause()","error ExpectedPause()","error ReentrancyGuardReentrantCall()",
+  "error ERC721NonexistentToken(uint256 tokenId)","error ERC721IncorrectOwner(address sender,uint256 tokenId,address owner)",
+  "error ERC721InsufficientApproval(address operator,uint256 tokenId)","error OwnableUnauthorizedAccount(address account)"
+];
+const REG_ABI = ["function handleOf(address) view returns (string)"];
+const MC_ABI = ["function aggregate3((address target,bool allowFailure,bytes callData)[] calls) payable returns ((bool success,bytes returnData)[])"];
+const TIERS = ["Common","Lucky","Golden","Jade"];
+const FRIENDLY = {
+  NotAgent: "This wallet has no .ai Agent ID. Lucky Cats only mints to wallets holding a SPACE ID Agent ID.",
+  AlreadyFreeMinted: "This wallet already used its free mint. Angpao boxes are still open.",
+  SoldOut: "Sold out: that pool has hit its cap.",
+  CapReached: "The Golden or Jade cap is full, so this forge can't create that tier.",
+  BadQuantity: "Pick between 1 and 10 boxes.",
+  WrongPayment: "The BNB amount doesn't match the price. The price may have just changed: refresh and try again.",
+  EnforcedPause: "Minting is paused right now. Mint opens soon.",
+  NotRevealed: "That cat is still sealed. Reveal it first.",
+  NotTokenOwner: "You don't own that cat.",
+  BadForge: "Forge needs 3 cats of the same tier (or 4 Golden for Jade), all revealed.",
+  NotListed: "That cat isn't listed anymore.",
+  ListingStale: "The seller no longer owns that cat. The listing is stale.",
+  SelfBuy: "You can't buy your own listing.",
+  BadPrice: "Enter a price above 0.",
+  TransferFailed: "A BNB transfer inside the contract failed.",
+  ReentrancyGuardReentrantCall: "Reentrant call blocked.",
+  PriceOutOfRange: "Price out of range.", BadTier: "Bad tier.", ZeroAddress: "Zero address.",
+  ERC721NonexistentToken: "That cat doesn't exist (it may have been forged away)."
+};
+
+// ───────────────────────── helpers ─────────────────────────
+const $ = (id) => document.getElementById(id);
+const E = window.ethers;
+const iface = new E.Interface(ABI);
+const fmtBNB = (wei, d = 4) => { const s = E.formatEther(wei); const n = Number(s); return (n === 0 ? "0" : n < 0.0001 ? s : n.toFixed(d).replace(/\.?0+$/, "")); };
+const short = (a) => a ? a.slice(0, 6) + "…" + a.slice(-4) : "";
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+function toast(title, html, kind = "", ms = 9000) {
+  const t = document.createElement("div"); t.className = "toast " + kind;
+  t.innerHTML = `<b>${esc(title)}</b>${html}`; $("toasts").appendChild(t);
+  if (ms) setTimeout(() => t.remove(), ms); return t;
+}
+const txLink = (h) => `<a href="${CFG.explorer}/tx/${h}" target="_blank" rel="noopener">${short(h)} on BscScan ↗</a>`;
+function decodeError(e) {
+  const seen = new Set();
+  const hunt = (o, depth = 0) => {
+    if (!o || depth > 6 || seen.has(o)) return null; if (typeof o !== "object") return null; seen.add(o);
+    for (const k of ["data", "revert"]) {
+      const v = o[k];
+      if (typeof v === "string" && /^0x[0-9a-fA-F]{8}/.test(v)) return v;
+      if (v && typeof v === "object" && v.name && FRIENDLY[v.name]) return v.name;
+    }
+    for (const k of ["error", "info", "cause", "data", "payload"]) { const r = hunt(o[k], depth + 1); if (r) return r; }
+    return null;
+  };
+  const d = hunt(e);
+  if (d) {
+    if (FRIENDLY[d]) return FRIENDLY[d];
+    try { const p = iface.parseError(d); if (p) return FRIENDLY[p.name] || p.name; } catch (_) {}
+  }
+  if (e && (e.code === "ACTION_REJECTED" || e.code === 4001 || (e.info && e.info.error && e.info.error.code === 4001))) return "You rejected the request in your wallet.";
+  if (e && e.code === "INSUFFICIENT_FUNDS") return "Not enough BNB for this transaction and its gas.";
+  const m = (e && (e.shortMessage || e.reason || e.message)) || String(e);
+  if (/insufficient funds/i.test(m)) return "Not enough BNB for this transaction and its gas.";
+  if (/user (rejected|denied)/i.test(m)) return "You rejected the request in your wallet.";
+  return m.length > 220 ? m.slice(0, 220) + "…" : m;
+}
+
+// ───────────────────────── read side (public RPC with fallbacks) ─────────────────────────
+let rpcIdx = 0; let rp = null;
+function readProvider() {
+  if (!rp) rp = new E.JsonRpcProvider(CFG.rpcs[rpcIdx], CFG.chainId, { staticNetwork: true, batchMaxCount: 1 });
+  return rp;
+}
+async function withRpc(fn) {
+  let last;
+  for (let i = 0; i < CFG.rpcs.length; i++) {
+    try {
+      return await Promise.race([fn(readProvider()), new Promise((_, r) => setTimeout(() => r(new Error("RPC timeout")), 12000))]);
+    } catch (e) {
+      last = e;
+      if (e && (e.code === "CALL_EXCEPTION" || e.data)) throw e; // a real revert, not an RPC failure
+      try { rp && rp.destroy(); } catch (_) {}
+      rp = null; rpcIdx = (rpcIdx + 1) % CFG.rpcs.length;
+    }
+  }
+  throw last;
+}
+const readC = (p) => new E.Contract(CFG.contract, ABI, p);
+async function multicall(calls) { // calls: [{fn, args}] on the LuckyCats contract, returns decoded or null
+  const out = [];
+  for (let i = 0; i < calls.length; i += 400) {
+    const chunk = calls.slice(i, i + 400);
+    const res = await withRpc((p) => new E.Contract(CFG.multicall, MC_ABI, p).aggregate3.staticCall(
+      chunk.map((c) => ({ target: CFG.contract, allowFailure: true, callData: iface.encodeFunctionData(c.fn, c.args || []) }))));
+    res.forEach((r, j) => {
+      if (!r.success) return out.push(null);
+      try { out.push(iface.decodeFunctionResult(chunk[j].fn, r.returnData)); } catch (_) { out.push(null); }
+    });
+  }
+  return out;
+}
+
+let ST = null;
+async function loadStatus() {
+  try {
+    const s = await withRpc((p) => readC(p).status());
+    ST = { totalMinted: s[0], totalSupply: s[1], freeMinted: s[2], boxesMinted: s[3], jade: s[4], golden: s[5], boxPrice: s[6], forgeFee: s[7], paused: s[8], nextToReveal: s[9], pending: s[10] };
+    renderStatus();
+  } catch (e) {
+    console.warn("status() failed", e);
+    const n = $("notice"); n.className = "notice err";
+    n.textContent = "Can't reach BNB Chain right now. Retrying…";
+  }
+}
+function pct(a, b) { return Math.min(100, Number(a) * 100 / b).toFixed(2) + "%"; }
+function renderStatus() {
+  const s = ST;
+  $("sFree").textContent = s.freeMinted.toString(); $("bFree").style.width = pct(s.freeMinted, 5000);
+  $("sBox").textContent = s.boxesMinted.toString(); $("bBox").style.width = pct(s.boxesMinted, 5000);
+  $("sJade").textContent = s.jade.toString(); $("bJade").style.width = pct(s.jade, 100);
+  $("sGold").textContent = s.golden.toString(); $("bGold").style.width = pct(s.golden, 1000);
+  $("sMeta").textContent = `Box price ${fmtBNB(s.boxPrice)} BNB · Forge fee ${fmtBNB(s.forgeFee)} BNB · Supply ${s.totalSupply} · Waiting to reveal ${s.pending}`;
+  $("forgeFeeTxt").textContent = fmtBNB(s.forgeFee);
+  document.querySelectorAll(".boxPriceWei").forEach((x) => (x.textContent = s.boxPrice.toString()));
+  document.querySelectorAll(".boxPriceBnb").forEach((x) => (x.textContent = fmtBNB(s.boxPrice)));
+  $("pendingTxt").textContent = s.pending > 0n ? `${s.pending} cat(s) waiting` : "Queue is empty";
+  const n = $("notice");
+  if (s.paused) { n.className = "notice paused"; n.innerHTML = '<span class="blink">▶</span> MINT OPENS SOON · 招财猫 are waking up'; }
+  else if (s.freeMinted >= 5000n && s.boxesMinted >= 5000n) { n.className = "notice live"; n.textContent = "SOLD OUT · trade on the market below"; }
+  else { n.className = "notice live"; n.innerHTML = '<span class="blink">●</span> MINT IS LIVE · free mint for .ai Agent ID holders'; }
+  updateQty(); updateButtons();
+}
+
+// ───────────────────────── wallets (EIP-6963 + injected fallbacks) ─────────────────────────
+const discovered = new Map();
+window.addEventListener("eip6963:announceProvider", (ev) => {
+  const d = ev.detail; if (d && d.info && d.provider) discovered.set(d.info.uuid || d.info.rdns || d.info.name, d);
+});
+window.dispatchEvent(new Event("eip6963:requestProvider"));
+function walletOptions() {
+  const opts = [...discovered.values()].map((d) => ({ name: d.info.name, icon: d.info.icon, provider: d.provider, rdns: d.info.rdns }));
+  const have = (p) => opts.some((o) => o.provider === p);
+  const legacy = [
+    ["Binance Wallet", window.binancew3w && window.binancew3w.ethereum],
+    ["OKX Wallet", window.okxwallet],
+    ["Trust Wallet", window.trustwallet && (window.trustwallet.ethereum || window.trustwallet)],
+    ["Binance Chain Wallet", window.BinanceChain],
+  ];
+  for (const [name, p] of legacy) if (p && p.request && !have(p)) opts.push({ name, provider: p });
+  if (window.ethereum && window.ethereum.request && !have(window.ethereum)) {
+    const e = window.ethereum;
+    const name = e.isBinance ? "Binance Wallet" : e.isOkxWallet ? "OKX Wallet" : e.isTrust || e.isTrustWallet ? "Trust Wallet" : e.isMetaMask ? "MetaMask" : "Browser wallet";
+    opts.push({ name, provider: e });
+  }
+  return opts;
+}
+let W = { eip: null, provider: null, signer: null, addr: null, chainOk: false, isAgent: null, freeUsed: null, handle: "" };
+function openWalletModal() {
+  window.dispatchEvent(new Event("eip6963:requestProvider"));
+  setTimeout(() => {
+    const opts = walletOptions(); const list = $("wlist"); list.innerHTML = "";
+    $("noWallet").classList.toggle("hidden", opts.length > 0);
+    if (opts.length === 1) { connect(opts[0]); return; }
+    opts.forEach((o) => {
+      const b = document.createElement("button"); b.className = "btn block";
+      b.innerHTML = (o.icon ? `<img src="${esc(o.icon)}" alt="">` : "🐱") + `<span>${esc(o.name)}</span>`;
+      b.onclick = () => { closeModal(); connect(o); }; list.appendChild(b);
+    });
+    $("walletModal").classList.remove("hidden");
+  }, 150);
+}
+function closeModal() { $("walletModal").classList.add("hidden"); }
+async function ensureChain(eip) {
+  const want = "0x" + CFG.chainId.toString(16);
+  const cur = await eip.request({ method: "eth_chainId" });
+  if (cur && cur.toLowerCase() === want) return true;
+  try { await eip.request({ method: "wallet_switchEthereumChain", params: [{ chainId: want }] }); }
+  catch (e) {
+    const code = e && (e.code || (e.data && e.data.originalError && e.data.originalError.code));
+    if ((code === 4902 || /unrecognized|not added|unknown chain/i.test(e && e.message || "")) && CFG.chainId === 56) {
+      await eip.request({ method: "wallet_addEthereumChain", params: [BSC_PARAMS] });
+    } else throw e;
+  }
+  return true;
+}
+async function connect(opt) {
+  try {
+    const eip = opt.provider;
+    const accts = await eip.request({ method: "eth_requestAccounts" });
+    if (!accts || !accts.length) throw new Error("No account returned by the wallet.");
+    await ensureChain(eip);
+    W.eip = eip; W.name = opt.name;
+    await refreshWallet(accts[0]);
+    if (eip.on && !eip.__lucky) {
+      eip.__lucky = true;
+      eip.on("accountsChanged", (a) => a && a.length ? refreshWallet(a[0]) : disconnect());
+      eip.on("chainChanged", () => refreshWallet(W.addr));
+    }
+    toast("Connected", `${esc(opt.name)} · ${short(W.addr)}`, "ok", 4000);
+  } catch (e) { toast("Couldn't connect", esc(decodeError(e)), "bad"); }
+}
+function disconnect() { W = { eip: null }; renderWallet(); }
+let refreshSeq = 0;
+async function refreshWallet(addr) {
+  if (!W.eip || !addr) return;
+  const seq = ++refreshSeq; // drop stale results if the account changes mid-refresh
+  W.provider = new E.BrowserProvider(W.eip, "any");
+  W.addr = E.getAddress(addr);
+  const cid = await W.eip.request({ method: "eth_chainId" });
+  W.chainOk = parseInt(cid, 16) === CFG.chainId;
+  W.signer = await W.provider.getSigner(W.addr);
+  try {
+    const [ag, used, bal] = await withRpc((p) => Promise.all([readC(p).isAgent(W.addr), readC(p).freeMintUsed(W.addr), readC(p).balanceOf(W.addr)]));
+    if (seq !== refreshSeq) return;
+    W.isAgent = ag; W.freeUsed = used; W.balance = bal;
+  } catch (e) { console.warn(e); W.isAgent = null; W.freeUsed = null; W.balance = undefined; }
+  if (seq !== refreshSeq) return;
+  W.handle = "";
+  if (W.isAgent && !CFG.local) { try { W.handle = await withRpc((p) => new E.Contract(CFG.registry, REG_ABI, p).handleOf(W.addr)); } catch (_) {} }
+  if (seq === refreshSeq) renderWallet();
+}
+function renderWallet() {
+  const on = !!W.addr;
+  $("btnConnect").textContent = on ? short(W.addr) : "Connect";
+  $("btnConnect2").textContent = on ? "Switch wallet" : "Connect wallet";
+  $("wAddr").textContent = on ? W.addr : "Not connected";
+  const chips = [];
+  if (on) {
+    chips.push(W.chainOk ? '<span class="chip yes">BNB CHAIN</span>' : '<span class="chip no">WRONG NETWORK</span>');
+    if (W.isAgent === true) chips.push(`<span class="chip yes">AGENT ID ✓${W.handle ? " " + esc(W.handle) + ".ai" : ""}</span>`);
+    if (W.isAgent === false) chips.push('<span class="chip no">NO AGENT ID</span>');
+    if (W.freeUsed === true) chips.push('<span class="chip">FREE MINT USED</span>');
+    if (W.balance !== undefined) chips.push(`<span class="chip">${W.balance} CAT${W.balance == 1n ? "" : "S"}</span>`);
+  }
+  $("wChips").innerHTML = chips.join("");
+  const m = $("agentMsg");
+  if (on && W.isAgent === false) {
+    m.className = "msg bad";
+    m.innerHTML = 'You need a <b>.ai Agent ID</b> to mint. It is a SPACE ID Agent ID NFT held by this wallet, claimed from a Binance Agentic Wallet in the Binance Wallet app. <a href="https://docs.space.id/agent-id" target="_blank" rel="noopener">What is an Agent ID? ↗</a> You can still reveal the queue and browse the market.';
+  } else if (on && !W.chainOk) {
+    m.className = "msg bad"; m.innerHTML = 'Your wallet is on another network. <button class="btn sm" id="btnSwitch">Switch to BNB Chain</button>';
+    setTimeout(() => { const b = $("btnSwitch"); if (b) b.onclick = async () => { try { await ensureChain(W.eip); refreshWallet(W.addr); } catch (e) { toast("Network switch failed", esc(decodeError(e)), "bad"); } }; });
+  } else if (on && W.isAgent) {
+    m.className = "msg ok"; m.textContent = W.freeUsed ? "Agent ID verified. Your free mint is used. Angpao boxes are open to you." : "Agent ID verified. Your free cat is waiting.";
+  } else m.className = "msg hidden";
+  $("btnLoadCats").disabled = !on;
+  $("netpill").style.display = on ? "inline-block" : "none";
+  $("netpill").textContent = W.chainOk ? "BSC" : "WRONG NET";
+  updateButtons();
+}
+function updateButtons() {
+  const on = !!W.addr && W.chainOk; const p = ST ? ST.paused : true;
+  const free = $("btnFree"), box = $("btnBox");
+  free.disabled = !on || p || W.isAgent === false || W.freeUsed === true || (ST && ST.freeMinted >= 5000n);
+  box.disabled = !on || p || W.isAgent === false || (ST && ST.boxesMinted >= 5000n);
+  free.textContent = p ? "Mint opens soon" : W.freeUsed ? "Free mint used" : ST && ST.freeMinted >= 5000n ? "Free mint sold out" : "Free mint";
+  box.textContent = p ? "Mint opens soon" : ST && ST.boxesMinted >= 5000n ? "Boxes sold out" : "Mint Angpao box";
+}
+function getQty() { let q = parseInt($("qty").value, 10); if (!(q >= 1)) q = 1; if (q > 10) q = 10; return q; }
+function updateQty() { const q = getQty(); $("boxTotal").textContent = ST ? `= ${fmtBNB(ST.boxPrice * BigInt(q))} BNB` : "= – BNB"; }
+
+// ───────────────────────── tx sending ─────────────────────────
+async function needWallet() {
+  if (!W.addr) { openWalletModal(); return false; }
+  if (!W.chainOk) { try { await ensureChain(W.eip); await refreshWallet(W.addr); } catch (e) { toast("Wrong network", esc(decodeError(e)), "bad"); return false; } }
+  return W.chainOk;
+}
+async function send(label, fn, args = [], value = 0n, btn) {
+  if (!(await needWallet())) return null;
+  const c = new E.Contract(CFG.contract, ABI, W.signer);
+  if (btn) btn.disabled = true;
+  try {
+    // simulate first through the public RPC so custom errors decode reliably
+    await withRpc((p) => new E.Contract(CFG.contract, ABI, p)[fn].staticCall(...args, { value, from: W.addr }));
+    const tx = await c[fn](...args, { value });
+    const t = toast(label + " sent", "Waiting for confirmation… " + txLink(tx.hash), "", 0);
+    const rc = await tx.wait();
+    t.remove();
+    if (rc && rc.status === 1) toast(label + " confirmed 🎉", txLink(tx.hash), "ok", 12000);
+    else toast(label + " failed", txLink(tx.hash), "bad", 12000);
+    return rc;
+  } catch (e) {
+    console.warn(e); toast(label + " failed", esc(decodeError(e)), "bad", 12000); return null;
+  } finally {
+    if (btn) btn.disabled = false;
+    await loadStatus(); if (W.addr) await refreshWallet(W.addr);
+  }
+}
+async function afterMint(rc) {
+  if (!rc) return;
+  const ids = [];
+  for (const l of rc.logs || []) { try { const p = iface.parseLog(l); if (p && p.name === "Transfer" && p.args.to.toLowerCase() === W.addr.toLowerCase() && p.args.from === E.ZeroAddress) ids.push(p.args.tokenId); } catch (_) {} }
+  if (ids.length) toast("Your new cat" + (ids.length > 1 ? "s" : ""), `#${ids.join(", #")} sealed. It opens in a block or two. Load <b>My cats</b> to see it.`, "ok", 12000);
+  setTimeout(loadCats, 2500);
+}
+
+// ───────────────────────── my cats ─────────────────────────
+let MY = []; const SEL = new Set();
+const uriCache = new Map();
+function parseURI(uri) {
+  try {
+    const b64 = uri.split(",")[1]; const bin = atob(b64);
+    const json = JSON.parse(new TextDecoder().decode(Uint8Array.from(bin, (c) => c.charCodeAt(0))));
+    const at = {}; (json.attributes || []).forEach((a) => (at[a.trait_type] = a.value));
+    return { name: json.name, image: json.image, at };
+  } catch (e) { return null; }
+}
+async function ownedIds() {
+  const total = Number(ST ? ST.totalMinted : 0);
+  if (!total) return [];
+  const calls = []; for (let i = 1; i <= total; i++) calls.push({ fn: "ownerOf", args: [i] });
+  try {
+    const res = await multicall(calls); const me = W.addr.toLowerCase(); const ids = [];
+    res.forEach((r, i) => { if (r && r[0].toLowerCase() === me) ids.push(i + 1); });
+    return ids;
+  } catch (e) {
+    console.warn("multicall scan failed, falling back to logs", e);
+    const p = readProvider(); const latest = await p.getBlockNumber(); const ev = iface.getEvent("Transfer");
+    const owned = new Map(); const step = 5000; const start = Math.max(0, latest - 200000);
+    for (let to = latest; to > start; to -= step) {
+      const from = Math.max(start, to - step + 1);
+      for (const dir of ["in", "out"]) {
+        const topics = dir === "in" ? [ev.topicHash, null, E.zeroPadValue(W.addr, 32)] : [ev.topicHash, E.zeroPadValue(W.addr, 32)];
+        const logs = await p.getLogs({ address: CFG.contract, topics, fromBlock: from, toBlock: to });
+        logs.forEach((l) => { const id = Number(BigInt(l.topics[3])); const prev = owned.get(id); if (!prev || prev.b < l.blockNumber) owned.set(id, { b: l.blockNumber, in: dir === "in" }); });
+      }
+    }
+    return [...owned.entries()].filter(([, v]) => v.in).map(([k]) => k).sort((a, b) => a - b);
+  }
+}
+async function loadCats() {
+  if (!W.addr) return;
+  await loadStatus();
+  $("catsInfo").textContent = "Searching the shrine for your cats…"; $("btnLoadCats").disabled = true;
+  try {
+    const ids = await ownedIds(); SEL.clear();
+    if (!ids.length) { MY = []; $("catsGrid").innerHTML = ""; $("catsInfo").textContent = "No cats in this wallet yet."; $("forgeBox").classList.add("hidden"); return; }
+    const [cats, lst] = await Promise.all([multicall(ids.map((i) => ({ fn: "catOf", args: [i] }))), multicall(ids.map((i) => ({ fn: "listings", args: [i] })))]);
+    MY = ids.map((id, k) => {
+      const c = cats[k] && cats[k][0]; const l = lst[k];
+      return { id, revealed: c ? c.revealed : false, rarity: c ? Number(c.rarity) : 0, origin: c ? Number(c.origin) : 0, listed: l && l.seller !== E.ZeroAddress ? l.price : 0n };
+    });
+    $("catsInfo").textContent = `${MY.length} cat${MY.length > 1 ? "s" : ""} · ${MY.filter((c) => !c.revealed).length} sealed`;
+    renderCats(); $("forgeBox").classList.remove("hidden");
+    for (const c of MY) loadArt(c.id, "c");
+  } catch (e) { console.warn(e); $("catsInfo").textContent = "Couldn't load your cats: " + decodeError(e); }
+  finally { $("btnLoadCats").disabled = false; }
+}
+function catCard(c, mode) {
+  const tierHtml = c.revealed ? `<span class="tier t${c.rarity}">${TIERS[c.rarity].toUpperCase()}</span>` : '<span class="tier tS">SEALED</span>';
+  let acts = "";
+  if (mode === "c") {
+    if (c.listed) acts = `<span style="font-size:16px">Listed ${fmtBNB(c.listed)} BNB</span><button class="btn sm ghost" data-cancel="${c.id}">Cancel</button>`;
+    else if (c.revealed) acts = `<input type="number" step="0.001" min="0" placeholder="BNB" id="lp${c.id}"><button class="btn sm" data-list="${c.id}">List</button>`;
+    else acts = '<span style="font-size:16px">Opens after the next reveal</span>';
+  } else {
+    acts = `<span style="font-size:17px">${fmtBNB(c.price)} BNB · ${short(c.seller)}</span><button class="btn sm red" data-buy="${c.id}">Buy</button>`;
+  }
+  return `<div class="cat${SEL.has(c.id) && mode === "c" ? " sel" : ""}" data-id="${c.id}" data-mode="${mode}">
+    ${c.listed && mode === "c" ? '<span class="listed">LISTED</span>' : ""}
+    <div class="ph" id="${mode}img${c.id}">#${c.id}</div>
+    <div class="nm"><span>#${c.id}</span>${tierHtml}</div>
+    <div class="tr" id="${mode}tr${c.id}"></div>
+    <div class="acts">${acts}</div></div>`;
+}
+function renderCats() { $("catsGrid").innerHTML = MY.map((c) => catCard(c, "c")).join(""); MY.forEach((c) => uriCache.has(c.id) && paintArt(c.id, "c")); updateForge(); }
+async function loadArt(id, mode) {
+  if (!uriCache.has(id)) {
+    try { const uri = await withRpc((p) => readC(p).tokenURI(id)); uriCache.set(id, parseURI(uri)); }
+    catch (e) { console.warn("tokenURI", id, e); return; }
+  }
+  paintArt(id, mode);
+}
+function paintArt(id, mode) {
+  const m = uriCache.get(id); const ph = $(mode + "img" + id); if (!m || !ph) return;
+  const img = document.createElement("img"); img.alt = m.name || "#" + id; img.src = m.image; img.loading = "lazy"; ph.replaceWith(img);
+  const tr = $(mode + "tr" + id); if (tr) tr.textContent = [m.at.Coat, m.at.Accessory].filter(Boolean).join(" · ");
+}
+function updateForge() {
+  const sel = MY.filter((c) => SEL.has(c.id)); const b = $("btnForge"); const info = $("forgeSel");
+  if (!sel.length) { b.disabled = true; info.textContent = "Nothing selected"; return; }
+  const tier = sel[0].rarity; const same = sel.every((c) => c.revealed && c.rarity === tier && !c.listed);
+  const need = tier === 2 ? 4 : 3;
+  if (tier === 3) { b.disabled = true; info.textContent = "Jade is the top tier. It can't be forged."; return; }
+  if (!same) { b.disabled = true; info.textContent = "Pick revealed, unlisted cats of one tier."; return; }
+  b.disabled = sel.length !== need;
+  info.textContent = sel.length === need ? `${need} ${TIERS[tier]} → 1 ${TIERS[tier + 1]}` : `${sel.length}/${need} ${TIERS[tier]} selected`;
+}
+
+// ───────────────────────── market ─────────────────────────
+let MKT = [];
+async function loadMarket() {
+  await loadStatus();
+  const total = Number(ST ? ST.totalMinted : 0);
+  $("mktInfo").textContent = "Scanning listings…"; $("btnLoadMarket").disabled = true;
+  try {
+    const calls = []; for (let i = 1; i <= total; i++) calls.push({ fn: "listings", args: [i] });
+    const res = total ? await multicall(calls) : [];
+    MKT = []; res.forEach((r, i) => { if (r && r.seller !== E.ZeroAddress) MKT.push({ id: i + 1, seller: r.seller, price: r.price, revealed: true, rarity: 0 }); });
+    if (MKT.length) {
+      const cats = await multicall(MKT.map((m) => ({ fn: "catOf", args: [m.id] })));
+      MKT.forEach((m, k) => { if (cats[k]) m.rarity = Number(cats[k][0].rarity); });
+    }
+    MKT.sort((a, b) => (a.price < b.price ? -1 : 1));
+    $("mktInfo").textContent = MKT.length ? `${MKT.length} cat${MKT.length > 1 ? "s" : ""} for sale` : "No listings yet.";
+    $("mktGrid").innerHTML = MKT.slice(0, 60).map((c) => catCard(c, "m")).join("");
+    MKT.slice(0, 60).forEach((c) => loadArt(c.id, "m"));
+  } catch (e) { $("mktInfo").textContent = "Couldn't load listings: " + decodeError(e); }
+  finally { $("btnLoadMarket").disabled = false; }
+}
+
+// ───────────────────────── wiring ─────────────────────────
+$("btnConnect").onclick = openWalletModal; $("btnConnect2").onclick = openWalletModal; $("btnCloseModal").onclick = closeModal;
+$("walletModal").onclick = (e) => { if (e.target.id === "walletModal") closeModal(); };
+$("qMinus").onclick = () => { $("qty").value = Math.max(1, getQty() - 1); updateQty(); };
+$("qPlus").onclick = () => { $("qty").value = Math.min(10, getQty() + 1); updateQty(); };
+$("qty").oninput = updateQty; $("qty").onchange = () => { $("qty").value = getQty(); updateQty(); };
+$("btnFree").onclick = async (ev) => afterMint(await send("Free mint", "freeMint", [], 0n, ev.currentTarget));
+$("btnBox").onclick = async (ev) => {
+  await loadStatus(); const q = getQty();
+  afterMint(await send(`Angpao box ×${q}`, "mintBox", [q], ST.boxPrice * BigInt(q), ev.currentTarget));
+};
+$("btnReveal").onclick = async (ev) => {
+  if (ST && ST.pending === 0n) { toast("Nothing to reveal", "The queue is empty. Every cat is open.", "", 4000); return; }
+  const rc = await send("Reveal", "reveal", [200], 0n, ev.currentTarget);
+  if (rc) { uriCache.clear(); if (MY.length) loadCats(); }
+};
+$("btnLoadCats").onclick = loadCats; $("btnLoadMarket").onclick = loadMarket;
+$("btnClearSel").onclick = () => { SEL.clear(); renderCats(); };
+$("btnForge").onclick = async (ev) => {
+  const ids = [...SEL]; await loadStatus();
+  const rc = await send("Forge", "forge", [ids], ST.forgeFee, ev.currentTarget);
+  if (rc) { ids.forEach((i) => uriCache.delete(i)); SEL.clear(); afterMint(rc); }
+};
+document.addEventListener("click", async (ev) => {
+  const t = ev.target;
+  if (t.dataset && t.dataset.list) {
+    ev.stopPropagation(); const id = Number(t.dataset.list); const v = ($("lp" + id) || {}).value;
+    let wei; try { wei = E.parseEther(String(v || "")); } catch (_) { wei = 0n; }
+    if (wei <= 0n) { toast("Set a price", "Enter a price in BNB, e.g. 0.01", "bad", 5000); return; }
+    if (await send(`List #${id}`, "list", [id, wei], 0n, t)) loadCats(); return;
+  }
+  if (t.dataset && t.dataset.cancel) { ev.stopPropagation(); const id = Number(t.dataset.cancel); if (await send(`Cancel #${id}`, "cancel", [id], 0n, t)) loadCats(); return; }
+  if (t.dataset && t.dataset.buy) {
+    ev.stopPropagation(); const id = Number(t.dataset.buy); const m = MKT.find((x) => x.id === id); if (!m) return;
+    if (await send(`Buy #${id}`, "buy", [id], m.price, t)) { loadMarket(); if (W.addr) loadCats(); } return;
+  }
+  const card = t.closest && t.closest('.cat[data-mode="c"]');
+  if (card && !t.closest("input,button")) {
+    const id = Number(card.dataset.id); SEL.has(id) ? SEL.delete(id) : SEL.add(id);
+    card.classList.toggle("sel", SEL.has(id)); updateForge();
+  }
+});
+if (CFG.contract.toLowerCase() !== "0x48ab7d1eddc73b329f9db049b846d547092e77df") {
+  document.querySelectorAll(".cAddr").forEach((x) => (x.textContent = CFG.contract));
+}
+window.__lucky = { CFG, loadStatus, get ST() { return ST; }, decodeError, iface };
+loadStatus(); setInterval(loadStatus, 15000);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) loadStatus(); });
+})();
+</script>
+</body>
+</html>
