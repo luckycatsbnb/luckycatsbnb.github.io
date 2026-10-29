@@ -89,6 +89,14 @@ section{padding:26px 0 6px}
 .stat.jade .v{color:#6fe7b6}.stat.jade{border-color:var(--jade)}
 .stat.golden .v{color:var(--gold)}
 .meta{font-size:18px;color:#d8b98a;margin-top:10px}
+/* countdown */
+.cd{background:var(--ink);border:3px solid var(--gold);padding:12px;margin-bottom:12px;text-align:center}
+.cd .k{font-family:var(--px);font-size:9px;color:var(--gold);text-transform:uppercase}
+.cd .t{display:flex;justify-content:center;gap:10px;margin-top:10px}
+.cd .t div{min-width:58px}
+.cd .t b{display:block;font-family:var(--px);font-size:18px;color:var(--cream)}
+.cd .t span{font-size:16px;color:#d8b98a}
+.cd .end{font-size:17px;color:#d8b98a;margin-top:8px}
 /* mint */
 .mintcard{display:flex;flex-direction:column;gap:12px}
 .mintcard .art{display:flex;gap:10px;align-items:center}
@@ -181,6 +189,9 @@ details summary{cursor:pointer;font-family:var(--px);font-size:10px;color:var(--
 <!-- STATS -->
 <section id="stats">
   <h2>🏮 Live stats</h2>
+  <div class="cd" id="cd"><div class="k">⏳ Sale ends in</div>
+    <div class="t" id="cdT"><div><b id="cdD">--</b><span>days</span></div><div><b id="cdH">--</b><span>hrs</span></div><div><b id="cdM">--</b><span>min</span></div><div><b id="cdS">--</b><span>sec</span></div></div>
+    <div class="end">Ends 5 Nov 2026, 23:59 WIB (UTC+7)</div></div>
   <div class="stats">
     <div class="stat"><div class="k">Free minted</div><div class="v"><span id="sFree">–</span><small> / 5000</small></div><div class="bar"><i id="bFree"></i></div></div>
     <div class="stat"><div class="k">Angpao boxes</div><div class="v"><span id="sBox">–</span><small> / 5000</small></div><div class="bar"><i id="bBox"></i></div></div>
@@ -506,6 +517,16 @@ async function multicall(calls) { // calls: [{fn, args}] on the LuckyCats contra
 }
 
 let ST = null;
+const SALE_END = Date.parse("2026-11-05T23:59:59+07:00");
+function saleEnded() { return Date.now() >= SALE_END; }
+function tickCountdown() {
+  const ms = SALE_END - Date.now();
+  if (ms <= 0) { $("cd").querySelector(".k").textContent = "Sale has ended"; $("cdT").style.display = "none"; if (ST) renderStatus(); return false; }
+  const t = Math.floor(ms / 1000), z = (n) => String(n).padStart(2, "0");
+  $("cdD").textContent = Math.floor(t / 86400); $("cdH").textContent = z(Math.floor(t % 86400 / 3600));
+  $("cdM").textContent = z(Math.floor(t % 3600 / 60)); $("cdS").textContent = z(t % 60);
+  return true;
+}
 async function loadStatus() {
   try {
     const s = await withRpc((p) => readC(p).status());
@@ -530,7 +551,8 @@ function renderStatus() {
   document.querySelectorAll(".boxPriceBnb").forEach((x) => (x.textContent = fmtBNB(s.boxPrice)));
   $("pendingTxt").textContent = s.pending > 0n ? `${s.pending} cat(s) waiting` : "Queue is empty";
   const n = $("notice");
-  if (s.paused) { n.className = "notice paused"; n.innerHTML = '<span class="blink">▶</span> MINT OPENS SOON · 招财猫 are waking up'; }
+  if (saleEnded()) { n.className = "notice paused"; n.textContent = "SALE ENDED · trade on the market below"; }
+  else if (s.paused) { n.className = "notice paused"; n.innerHTML = '<span class="blink">▶</span> MINT OPENS SOON · 招财猫 are waking up'; }
   else if (s.freeMinted >= 5000n && s.boxesMinted >= 5000n) { n.className = "notice live"; n.textContent = "SOLD OUT · trade on the market below"; }
   else { n.className = "notice live"; n.innerHTML = '<span class="blink">●</span> MINT IS LIVE · free mint for .ai Agent ID holders'; }
   updateQty(); updateButtons();
@@ -654,12 +676,12 @@ function renderWallet() {
   updateButtons();
 }
 function updateButtons() {
-  const on = !!W.addr && W.chainOk; const p = ST ? ST.paused : true;
+  const on = !!W.addr && W.chainOk; const p = ST ? ST.paused : true; const ended = saleEnded();
   const free = $("btnFree"), box = $("btnBox");
-  free.disabled = !on || p || W.isAgent === false || W.freeUsed === true || (ST && ST.freeMinted >= 5000n);
-  box.disabled = !on || p || W.isAgent === false || (ST && ST.boxesMinted >= 5000n);
-  free.textContent = p ? "Mint opens soon" : W.freeUsed ? "Free mint used" : ST && ST.freeMinted >= 5000n ? "Free mint sold out" : "Free mint";
-  box.textContent = p ? "Mint opens soon" : ST && ST.boxesMinted >= 5000n ? "Boxes sold out" : "Mint Angpao box";
+  free.disabled = ended || !on || p || W.isAgent === false || W.freeUsed === true || (ST && ST.freeMinted >= 5000n);
+  box.disabled = ended || !on || p || W.isAgent === false || (ST && ST.boxesMinted >= 5000n);
+  free.textContent = ended ? "Sale ended" : p ? "Mint opens soon" : W.freeUsed ? "Free mint used" : ST && ST.freeMinted >= 5000n ? "Free mint sold out" : "Free mint";
+  box.textContent = ended ? "Sale ended" : p ? "Mint opens soon" : ST && ST.boxesMinted >= 5000n ? "Boxes sold out" : "Mint Angpao box";
 }
 function getQty() { let q = parseInt($("qty").value, 10); if (!(q >= 1)) q = 1; if (q > 10) q = 10; return q; }
 function updateQty() { const q = getQty(); $("boxTotal").textContent = ST ? `= ${fmtBNB(ST.boxPrice * BigInt(q))} BNB` : "= – BNB"; }
@@ -861,6 +883,7 @@ if (CFG.contract.toLowerCase() !== "0x48ab7d1eddc73b329f9db049b846d547092e77df")
 }
 window.__lucky = { CFG, loadStatus, get ST() { return ST; }, decodeError, iface };
 loadStatus(); setInterval(loadStatus, 15000);
+if (tickCountdown()) { const cdI = setInterval(() => { if (!tickCountdown()) clearInterval(cdI); }, 1000); }
 document.addEventListener("visibilitychange", () => { if (!document.hidden) loadStatus(); });
 })();
 </script>
